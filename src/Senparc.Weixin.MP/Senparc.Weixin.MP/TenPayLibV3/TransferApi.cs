@@ -52,7 +52,7 @@ namespace Senparc.Weixin.MP.TenPayLibV3
             //NO_CHECK：不校验真实姓名
             //FORCE_CHECK：强校验真实姓名（未实名认证的用户会校验失败，无法转账）
             //OPTION_CHECK：针对已实名认证的用户才校验真实姓名（未实名认证用户不校验，可以转账成功）
-            packageReqHandler.SetParameter("check_name", "OPTION_CHECK");
+            packageReqHandler.SetParameter("check_name", "NO_CHECK");
             packageReqHandler.SetParameter("re_user_name", reUserName);   //收款用户真实姓名。
             packageReqHandler.SetParameter("amount", amount.ToString());       //金额,以分为单位
             packageReqHandler.SetParameter("desc", desc);

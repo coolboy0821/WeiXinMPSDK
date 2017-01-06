@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml;
 using Senparc.Weixin.MP.Helpers;
+using System.IO;
 
 namespace Senparc.Weixin.MP.TenPayLibV3
 {
@@ -82,7 +83,7 @@ namespace Senparc.Weixin.MP.TenPayLibV3
         /// 获取页面提交的get和post参数
         /// </summary>
         /// <param name="httpContext"></param>
-        public ResponseHandler(HttpContext httpContext)
+        public ResponseHandler(HttpContext httpContext, Stream stream = null)
         {
             Parameters = new Hashtable();
             XmlMap = new Hashtable();
@@ -106,27 +107,49 @@ namespace Senparc.Weixin.MP.TenPayLibV3
                 string v = (string)collection[k];
                 this.SetParameter(k, v);
             }
-            if (this.HttpContext.Request.InputStream.Length > 0)
+            try
             {
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(this.HttpContext.Request.InputStream);
-                XmlNode root = xmlDoc.SelectSingleNode("xml");
-                XmlNodeList xnl = root.ChildNodes;
-
-                foreach (XmlNode xnf in xnl)
+                if (this.HttpContext.Request.InputStream.Length > 0)
                 {
-                    XmlMap.Add(xnf.Name, xnf.InnerText);
-                    this.SetParameter(xnf.Name, xnf.InnerText);
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.Load(this.HttpContext.Request.InputStream);
+                    XmlNode root = xmlDoc.SelectSingleNode("xml");
+                    XmlNodeList xnl = root.ChildNodes;
+
+                    foreach (XmlNode xnf in xnl)
+                    {
+                        XmlMap.Add(xnf.Name, xnf.InnerText);
+                        this.SetParameter(xnf.Name, xnf.InnerText);
+                    }
                 }
             }
-        }
-    
+            catch { }
 
-		/// <summary>
+            try
+            {
+                if (stream != null)
+                {
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.Load(stream);
+                    XmlNode root = xmlDoc.SelectSingleNode("xml");
+                    XmlNodeList xnl = root.ChildNodes;
+
+                    foreach (XmlNode xnf in xnl)
+                    {
+                        XmlMap.Add(xnf.Name, xnf.InnerText);
+                        this.SetParameter(xnf.Name, xnf.InnerText);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        public ResponseHandler(Stream stream) : this(null, stream) { }
+        /// <summary>
         /// 获取密钥
-		/// </summary>
-		/// <returns></returns>
-		public string GetKey() 
+        /// </summary>
+        /// <returns></returns>
+        public string GetKey() 
 		{ return Key;}
 
 		/// <summary>

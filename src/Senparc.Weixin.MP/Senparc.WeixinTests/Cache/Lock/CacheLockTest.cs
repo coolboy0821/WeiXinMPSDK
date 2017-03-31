@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Weixin.Cache;
-using Senparc.Weixin.Cache.Redis;
+//using Senparc.Weixin.Cache.Redis;
 
 namespace Senparc.WeixinTests.Cache.Lock
 {
@@ -22,6 +22,7 @@ namespace Senparc.WeixinTests.Cache.Lock
                     (DateTime.Now - dt1).TotalMilliseconds);
                 Thread.Sleep(20);
             });
+
             var dt2 = DateTime.Now;
             Console.WriteLine("Working Threads Count:{0}", 100 * 20 / (dt2 - dt1).TotalMilliseconds);
             //测试结果：同时运行的线程数约为4（平均3.6）,实际目测为5
@@ -79,7 +80,6 @@ namespace Senparc.WeixinTests.Cache.Lock
                 RedisManager.ConfigurationOption = redisConfiguration;
                 CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisObjectCacheStrategy.Instance);//Redis
             }
-
 
             Random rnd = new Random();
             var threadsCount = 20M;

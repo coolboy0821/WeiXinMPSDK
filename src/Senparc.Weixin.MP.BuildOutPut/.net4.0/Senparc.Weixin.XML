@@ -13,8 +13,8 @@
             <summary>
             获取拼装后的FinalKey
             </summary>
-            <param name="key"></param>
-            <param name="isFullKey"></param>
+            <param name="key">键</param>
+            <param name="isFullKey">是否已经是经过拼接的FullKey</param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Weixin.Cache.BaseCacheStrategy.BeginCacheLock(System.String,System.String,System.Int32,System.TimeSpan)">
@@ -47,6 +47,26 @@
             <param name="containerBag"></param>
             <param name="isFullKey">是否已经是完整的Key，如果不是，则会调用一次GetFinalKey()方法</param>
         </member>
+        <member name="T:Senparc.Weixin.Cache.LocalCacheLock">
+            <summary>
+            本地锁
+            </summary>
+        </member>
+        <member name="F:Senparc.Weixin.Cache.LocalCacheLock.LockPool">
+            <summary>
+            锁存放容器
+            </summary>
+        </member>
+        <member name="F:Senparc.Weixin.Cache.LocalCacheLock._rnd">
+            <summary>
+            随机数
+            </summary>
+        </member>
+        <member name="F:Senparc.Weixin.Cache.LocalCacheLock.lookPoolLock">
+            <summary>
+            读取LockPool时的锁
+            </summary>
+        </member>
         <member name="T:Senparc.Weixin.Cache.LocalContainerCacheStrategy">
             <summary>
             本地容器缓存策略
@@ -57,14 +77,19 @@
             LocalCacheStrategy的构造函数
             </summary>
         </member>
+        <member name="T:Senparc.Weixin.Cache.IBaseCacheStrategy">
+            <summary>
+            最底层的缓存策略接口
+            </summary>
+        </member>
         <member name="M:Senparc.Weixin.Cache.IBaseCacheStrategy.BeginCacheLock(System.String,System.String,System.Int32,System.TimeSpan)">
             <summary>
             创建一个（分布）锁
             </summary>
-            <param name="resourceName"></param>
-            <param name="key"></param>
-            <param name="retryCount"></param>
-            <param name="retryDelay"></param>
+            <param name="resourceName">资源名称</param>
+            <param name="key">Key标识</param>
+            <param name="retryCount">重试次数</param>
+            <param name="retryDelay">重试延时</param>
             <returns></returns>
         </member>
         <member name="T:Senparc.Weixin.Cache.IBaseCacheStrategy`2">
@@ -135,6 +160,12 @@
             缓存同步锁基类
             </summary>
         </member>
+        <member name="M:Senparc.Weixin.Cache.BaseCacheLock.LockNow">
+            <summary>
+            立即开始锁定，需要在子类的构造函数中执行
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Senparc.Weixin.Cache.ICacheLock">
             <summary>
             缓存锁接口
@@ -145,26 +176,26 @@
             是否成功获得锁
             </summary>
         </member>
-        <member name="M:Senparc.Weixin.Cache.ICacheLock.LockNow">
-            <summary>
-            立即开始锁定
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:Senparc.Weixin.Cache.ICacheLock.Lock(System.String)">
             <summary>
             开始锁
             </summary>
-            <param name="resourceName"></param>
+            <param name="resourceName">资源名称，即锁的标识，实际值为IBaseCacheStrategy接口中的 BeginCacheLock() 方法中的 [resourceName.key]</param>
         </member>
         <member name="M:Senparc.Weixin.Cache.ICacheLock.Lock(System.String,System.Int32,System.TimeSpan)">
             <summary>
             开始锁，并设置重试条件
             </summary>
-            <param name="resourceName"></param>
-            <param name="retryCount"></param>
-            <param name="retryDelay"></param>
+            <param name="resourceName">资源名称，即锁的标识，实际值为IBaseCacheStrategy接口中的 BeginCacheLock() 方法中的 [resourceName.key]</param>
+            <param name="retryCount">重试次数</param>
+            <param name="retryDelay">每次重试延时</param>
             <returns></returns>
+        </member>
+        <member name="M:Senparc.Weixin.Cache.ICacheLock.UnLock(System.String)">
+            <summary>
+            释放锁
+            </summary>
+            <param name="resourceName">需要释放锁的 Key，即锁的标识，实际值为IBaseCacheStrategy接口中的 BeginCacheLock() 方法中的 [resourceName.key]资源名称，和 Lock() 方法中的 resourceName 对应</param>
         </member>
         <member name="T:Senparc.Weixin.Cache.IObjectCacheStrategy">
             <summary>
@@ -305,9 +336,15 @@
             <param name="shortKey"></param>
             <returns></returns>
         </member>
+        <member name="M:Senparc.Weixin.Containers.BaseContainer`1.RemoveFromCache(System.String)">
+            <summary>
+            从缓存中删除
+            </summary>
+            <param name="shortKey"></param>
+        </member>
         <member name="T:Senparc.Weixin.Containers.IBaseContainerBag">
             <summary>
-            IBaseContainerBag
+            IBaseContainerBag，BaseContainer容器中的Value类型
             </summary>
         </member>
         <member name="P:Senparc.Weixin.Containers.IBaseContainerBag.Name">
@@ -359,6 +396,12 @@
             <param name="value"></param>
             <param name="propertyName"></param>
             <returns></returns>
+        </member>
+        <member name="T:Senparc.Weixin.Context.MessageContainer`1">
+            <summary>
+            消息容器（列表）
+            </summary>
+            <typeparam name="T"></typeparam>
         </member>
         <member name="P:Senparc.Weixin.Context.MessageContainer`1.MaxRecordCount">
             <summary>
@@ -445,12 +488,7 @@
             此上下文被清除的时候触发
             </summary>
         </member>
-        <member name="T:Senparc.Weixin.Context.MessageQueue`3">
-            <summary>
-            微信消息列队（针对单个账号的往来消息）
-            </summary>
-            <typeparam name="TM"></typeparam>
-        </member>
+        <!-- 对于成员“T:Senparc.Weixin.Context.MessageQueue`3”忽略有格式错误的 XML 注释 -->
         <member name="F:Senparc.Weixin.Context.WeixinContextGlobal.UseWeixinContext">
             <summary>
             是否开启上下文记录
@@ -469,7 +507,7 @@
         </member>
         <member name="P:Senparc.Weixin.Context.WeixinContext`3.MessageQueue">
             <summary>
-            MessageContext列队（LastActiveTime升序排列）,不要直接操作此对象
+            MessageContext队列（LastActiveTime升序排列）,不要直接操作此对象
             </summary>
         </member>
         <member name="P:Senparc.Weixin.Context.WeixinContext`3.ExpireMinutes">
@@ -584,17 +622,42 @@
         </member>
         <member name="T:Senparc.Weixin.Entities.IJsonIgnoreNull">
             <summary>
+            接口：生成JSON时忽略NULL对象
+            </summary>
+        </member>
+        <member name="T:Senparc.Weixin.Entities.JsonIgnoreNull">
+            <summary>
             生成JSON时忽略NULL对象
             </summary>
         </member>
         <member name="T:Senparc.Weixin.Entities.IJsonEnumString">
             <summary>
-            类中有枚举在序列化的时候，需要转成字符串
+            接口：类中有枚举在序列化的时候，需要转成字符串
+            </summary>
+        </member>
+        <member name="T:Senparc.Weixin.Entities.IJsonResult">
+            <summary>
+            所有 JSON 格式返回值的API返回结果接口
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.IJsonResult.errmsg">
+            <summary>
+            返回结果信息
+            </summary>
+        </member>
+        <member name="T:Senparc.Weixin.Entities.IWxJsonResult">
+            <summary>
+            包含 errorcode 的 Json 返回结果接口
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.IWxJsonResult.errcode">
+            <summary>
+            返回结果代码
             </summary>
         </member>
         <member name="T:Senparc.Weixin.Entities.IJsonResultCallback">
             <summary>
-            JSON数据（序列化）回调接口
+            JSON 数据（序列化）回调接口
             </summary>
         </member>
         <member name="M:Senparc.Weixin.Entities.IJsonResultCallback.SerializingCallback">
@@ -622,7 +685,17 @@
         </member>
         <member name="T:Senparc.Weixin.Entities.QyJsonResult">
             <summary>
-            企业号JSON返回结果
+            企业号 JSON 返回结果
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.QyJsonResult.errcode">
+            <summary>
+            返回代码
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.QyJsonResult.errmsg">
+            <summary>
+            返回消息
             </summary>
         </member>
         <member name="P:Senparc.Weixin.Entities.QyJsonResult.P2PData">
@@ -630,10 +703,51 @@
             为P2P返回结果做准备
             </summary>
         </member>
+        <member name="T:Senparc.Weixin.Entities.IMessageBase">
+            <summary>
+            所有Request和Response消息的接口
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.IMessageBase.ToUserName">
+            <summary>
+            接收人（在 Request 中为公众号的微信号，在 Response 中为 OpenId）
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.IMessageBase.FromUserName">
+            <summary>
+            发送人（在 Request 中为OpenId，在 Response 中为公众号的微信号）
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.IMessageBase.CreateTime">
+            <summary>
+            消息创建时间
+            </summary>
+        </member>
         <member name="T:Senparc.Weixin.Entities.MessageBase">
             <summary>
             所有Request和Response消息的基类
             </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.MessageBase.ToUserName">
+            <summary>
+            接收人（在 Request 中为公众号的微信号，在 Response 中为 OpenId）
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.MessageBase.FromUserName">
+            <summary>
+            发送人（在 Request 中为OpenId，在 Response 中为公众号的微信号）
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.MessageBase.CreateTime">
+            <summary>
+            消息创建时间
+            </summary>
+        </member>
+        <member name="M:Senparc.Weixin.Entities.MessageBase.ToString">
+            <summary>
+            ToString() 方法重写
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Senparc.Weixin.Entities.IResponseMessageNoResponse">
             <summary>
@@ -655,19 +769,49 @@
             SuccessResponseMessage构造函数
             </summary>
         </member>
-        <member name="T:Senparc.Weixin.Entities.IJsonResult">
+        <member name="T:Senparc.Weixin.Entities.TemplateMessage.ITemplateMessageBase">
             <summary>
-            所有JSON格式返回值的API返回结果接口
+            模板消息数据基础类接口
             </summary>
         </member>
-        <member name="T:Senparc.Weixin.Entities.IWxJsonResult">
+        <member name="P:Senparc.Weixin.Entities.TemplateMessage.ITemplateMessageBase.TemplateId">
             <summary>
-            包含errorcode的Json返回结果接口
+            Url，为null时会自动忽略
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.TemplateMessage.ITemplateMessageBase.Url">
+            <summary>
+            Url，为null时会自动忽略
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.TemplateMessage.ITemplateMessageBase.TemplateName">
+            <summary>
+            模板名称
+            </summary>
+        </member>
+        <member name="T:Senparc.Weixin.Entities.TemplateMessage.TemplateMessageBase">
+            <summary>
+            模板消息数据基础类
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.TemplateMessage.TemplateMessageBase.TemplateId">
+            <summary>
+            每个公众号都不同的templateId
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.TemplateMessage.TemplateMessageBase.Url">
+            <summary>
+            Url，为null时会自动忽略
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Entities.TemplateMessage.TemplateMessageBase.TemplateName">
+            <summary>
+            模板名称
             </summary>
         </member>
         <member name="T:Senparc.Weixin.Entities.WxJsonResult">
             <summary>
-            公众号JSON返回结果（用于菜单接口等）
+            公众号 JSON 返回结果（用于菜单接口等）
             </summary>
         </member>
         <member name="P:Senparc.Weixin.Entities.WxJsonResult.P2PData">
@@ -677,12 +821,17 @@
         </member>
         <member name="T:Senparc.Weixin.Entities.RequestMessageBase">
             <summary>
-            接收到请求的消息
+            接收到请求的消息基类
+            </summary>
+        </member>
+        <member name="T:Senparc.Weixin.Entities.IResponseMessageBase">
+            <summary>
+            响应回复消息基类接口
             </summary>
         </member>
         <member name="T:Senparc.Weixin.Entities.ResponseMessageBase">
             <summary>
-            响应回复消息
+            响应回复消息基类
             </summary>
         </member>
         <member name="T:Senparc.Weixin.IEncryptPostModel">
@@ -690,9 +839,69 @@
             接收加密信息统一接口
             </summary>
         </member>
+        <member name="P:Senparc.Weixin.IEncryptPostModel.Signature">
+            <summary>
+            Signature
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.IEncryptPostModel.Msg_Signature">
+            <summary>
+            Msg_Signature
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.IEncryptPostModel.Timestamp">
+            <summary>
+            Timestamp
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.IEncryptPostModel.Nonce">
+            <summary>
+            Nonce
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.IEncryptPostModel.Token">
+            <summary>
+            Token
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.IEncryptPostModel.EncodingAESKey">
+            <summary>
+            EncodingAESKey
+            </summary>
+        </member>
         <member name="T:Senparc.Weixin.EncryptPostModel">
             <summary>
             接收加密信息统一基类
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.EncryptPostModel.Signature">
+            <summary>
+            Signature
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.EncryptPostModel.Msg_Signature">
+            <summary>
+            Msg_Signature
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.EncryptPostModel.Timestamp">
+            <summary>
+            Timestamp
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.EncryptPostModel.Nonce">
+            <summary>
+            Nonce
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.EncryptPostModel.Token">
+            <summary>
+            Token
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.EncryptPostModel.EncodingAESKey">
+            <summary>
+            EncodingAESKey
             </summary>
         </member>
         <member name="M:Senparc.Weixin.EncryptPostModel.SetSecretInfo(System.String,System.String)">
@@ -701,11 +910,20 @@
             </summary>
             <param name="token"></param>
             <param name="encodingAESKey"></param>
-            <param name="appId"></param>
         </member>
         <member name="T:Senparc.Weixin.CommonJsonSendType">
             <summary>
             CommonJsonSend中的http提交类型
+            </summary>
+        </member>
+        <member name="F:Senparc.Weixin.CommonJsonSendType.GET">
+            <summary>
+            GET 方法
+            </summary>
+        </member>
+        <member name="F:Senparc.Weixin.CommonJsonSendType.POST">
+            <summary>
+            POST 方法
             </summary>
         </member>
         <member name="T:Senparc.Weixin.ReturnCode">
@@ -781,7 +999,17 @@
         </member>
         <member name="T:Senparc.Weixin.Exceptions.ErrorJsonResultException">
             <summary>
-            JSON返回错误代码（比如access_token相关操作中使用）。
+            JSON返回错误代码异常（比如access_token相关操作中使用）
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Exceptions.ErrorJsonResultException.JsonResult">
+            <summary>
+            JsonResult
+            </summary>
+        </member>
+        <member name="P:Senparc.Weixin.Exceptions.ErrorJsonResultException.Url">
+            <summary>
+            接口 URL
             </summary>
         </member>
         <member name="M:Senparc.Weixin.Exceptions.ErrorJsonResultException.#ctor(System.String,System.Exception,Senparc.Weixin.Entities.WxJsonResult,System.String)">
@@ -800,7 +1028,7 @@
         </member>
         <member name="T:Senparc.Weixin.Exceptions.UnknownRequestMsgTypeException">
             <summary>
-            未知请求类型。
+            未知请求类型异常
             </summary>
         </member>
         <member name="T:Senparc.Weixin.Exceptions.WeixinException">
@@ -830,12 +1058,17 @@
         </member>
         <member name="T:Senparc.Weixin.Exceptions.UnRegisterAppIdException">
             <summary>
-            未注册AppId异常
+            未注册 AppId 异常
             </summary>
         </member>
         <member name="T:Senparc.Weixin.Exceptions.WeixinMenuException">
             <summary>
             菜单异常
+            </summary>
+        </member>
+        <member name="T:Senparc.Weixin.Helpers.ContainerHelper">
+            <summary>
+            容器帮助类
             </summary>
         </member>
         <member name="M:Senparc.Weixin.Helpers.ContainerHelper.GetCacheKeyNamespace(System.Type)">
@@ -873,6 +1106,11 @@
             Allows JSON serialization of Expando objects into expected results (e.g., "x: 1, y: 2") instead of the default dictionary serialization.
             </summary>
         </member>
+        <member name="T:Senparc.Weixin.Helpers.DateTimeHelper">
+            <summary>
+            微信日期处理帮助类
+            </summary>
+        </member>
         <member name="M:Senparc.Weixin.Helpers.DateTimeHelper.GetDateTimeFromXml(System.Int64)">
             <summary>
             转换微信DateTime时间到C#时间
@@ -899,12 +1137,43 @@
              安全帮助类，提供SHA-1算法等
             
         </member>
-        <member name="M:Senparc.Weixin.Helpers.EncryptHelper.SHA1_Encrypt(System.String)">
-            
-             采用SHA-1算法加密字符串
-            
-             要加密的字符串
-             返回加密后的字符串
+        <member name="M:Senparc.Weixin.Helpers.EncryptHelper.GetSha1(System.String)">
+            <summary>
+            采用SHA-1算法加密字符串（小写）
+            </summary>
+            <param name="encypStr">需要加密的字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Weixin.Helpers.EncryptHelper.GetMD5(System.String,System.String)">
+            <summary>
+            获取大写的MD5签名结果
+            </summary>
+            <param name="encypStr">需要加密的字符串</param>
+            <param name="charset">编码</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Weixin.Helpers.EncryptHelper.AESEncrypt(System.Byte[],System.Byte[],System.String)">
+            <summary>
+            AES加密
+            </summary>
+            <param name="inputdata">输入的数据</param>
+            <param name="iv">向量</param>
+            <param name="strKey">加密密钥</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Weixin.Helpers.EncryptHelper.AESDecrypt(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            AES解密
+            </summary>
+            <param name="inputdata">输入的数据</param>
+            <param name="iv">向量</param>
+            <param name="strKey">key</param>
+            <returns></returns>
+        </member>
+        <member name="T:Senparc.Weixin.Helpers.FileHelper">
+            <summary>
+            文件帮助类
+            </summary>
         </member>
         <member name="M:Senparc.Weixin.Helpers.FileHelper.GetFileStream(System.String)">
             <summary>
@@ -920,7 +1189,7 @@
             <param name="url"></param>
             <param name="fullFilePathAndName"></param>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:Senparc.Weixin.Helpers.IDictionaryExtensions" -->
+        <!-- 对于成员“T:Senparc.Weixin.Helpers.IDictionaryExtensions”忽略有格式错误的 XML 注释 -->
         <member name="M:Senparc.Weixin.Helpers.IDictionaryExtensions.ToExpando(System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
             Extension method that turns a dictionary of string and object to an ExpandoObject
@@ -945,6 +1214,14 @@
             </summary>
             <param name="data">需要生成JSON字符串的数据</param>
             <param name="jsonSetting">JSON输出设置</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Weixin.Helpers.SerializerHelper.GetObject``1(System.String)">
+            <summary>
+            反序列化到对象
+            </summary>
+            <typeparam name="T">反序列化对象类型</typeparam>
+            <param name="jsonString">JSON字符串</param>
             <returns></returns>
         </member>
         <member name="T:Senparc.Weixin.Helpers.JsonSetting">
@@ -979,7 +1256,7 @@
         </member>
         <member name="M:Senparc.Weixin.Helpers.JsonSetting.#ctor(System.Boolean,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.Type})">
             <summary>
-            JSON输出设置 构造函数
+            JSON 输出设置 构造函数
             </summary>
             <param name="ignoreNulls">是否忽略当前类型以及具有IJsonIgnoreNull接口，且为Null值的属性。如果为true，符合此条件的属性将不会出现在Json字符串中</param>
             <param name="propertiesToIgnore">需要特殊忽略null值的属性名称</param>
@@ -987,17 +1264,17 @@
         </member>
         <member name="T:Senparc.Weixin.Helpers.WeixinJsonConventer">
             <summary>
-            微信JSON转换器
+            微信 JSON 转换器
             </summary>
         </member>
         <member name="T:Senparc.Weixin.MessageQueue.SenparcMessageQueue">
             <summary>
-            消息列队
+            消息队列
             </summary>
         </member>
         <member name="F:Senparc.Weixin.MessageQueue.SenparcMessageQueue.MessageQueueDictionary">
             <summary>
-            列队数据集合
+            队列数据集合
             </summary>
         </member>
         <member name="F:Senparc.Weixin.MessageQueue.SenparcMessageQueue.MessageQueueSyncLock">
@@ -1014,7 +1291,7 @@
             <summary>
             生成Key
             </summary>
-            <param name="name">列队应用名称，如“ContainerBag”</param>
+            <param name="name">队列应用名称，如“ContainerBag”</param>
             <param name="senderType">操作对象类型</param>
             <param name="identityKey">对象唯一标识Key</param>
             <param name="actionName">操作名称，如“UpdateContainerBag”</param>
@@ -1022,7 +1299,7 @@
         </member>
         <member name="M:Senparc.Weixin.MessageQueue.SenparcMessageQueue.OperateQueue">
             <summary>
-            操作列队
+            操作队列
             </summary>
         </member>
         <member name="M:Senparc.Weixin.MessageQueue.SenparcMessageQueue.GetCurrentKey">
@@ -1040,36 +1317,36 @@
         </member>
         <member name="M:Senparc.Weixin.MessageQueue.SenparcMessageQueue.Add(System.String,System.Action)">
             <summary>
-            添加列队成员
+            添加队列成员
             </summary>
             <param name="key"></param>
             <param name="action"></param>
         </member>
         <member name="M:Senparc.Weixin.MessageQueue.SenparcMessageQueue.Remove(System.String)">
             <summary>
-            移除列队成员
+            移除队列成员
             </summary>
             <param name="key"></param>
         </member>
         <member name="M:Senparc.Weixin.MessageQueue.SenparcMessageQueue.GetCount">
             <summary>
-            获得当前列队数量
+            获得当前队列数量
             </summary>
             <returns></returns>
         </member>
         <member name="T:Senparc.Weixin.MessageQueue.SenparcMessageQueueItem">
             <summary>
-            SenparcMessageQueue消息列队项
+            SenparcMessageQueue消息队列项
             </summary>
         </member>
         <member name="P:Senparc.Weixin.MessageQueue.SenparcMessageQueueItem.Key">
             <summary>
-            列队项唯一标识
+            队列项唯一标识
             </summary>
         </member>
         <member name="P:Senparc.Weixin.MessageQueue.SenparcMessageQueueItem.Action">
             <summary>
-            列队项目命中触发时执行的委托
+            队列项目命中触发时执行的委托
             </summary>
         </member>
         <member name="P:Senparc.Weixin.MessageQueue.SenparcMessageQueueItem.AddTime">
@@ -1084,7 +1361,7 @@
         </member>
         <member name="M:Senparc.Weixin.MessageQueue.SenparcMessageQueueItem.#ctor(System.String,System.Action,System.String)">
             <summary>
-            初始化SenparcMessageQueue消息列队项
+            初始化SenparcMessageQueue消息队列项
             </summary>
             <param name="key"></param>
             <param name="action"></param>
@@ -1097,7 +1374,7 @@
         </member>
         <member name="M:Senparc.Weixin.Threads.SenparcMessageQueueThreadUtility.Finalize">
             <summary>
-            析构函数，将未处理的列队处理掉
+            析构函数，将未处理的队列处理掉
             </summary>
         </member>
         <member name="M:Senparc.Weixin.Threads.SenparcMessageQueueThreadUtility.Run">
@@ -1660,6 +1937,11 @@
             The attribute must be mentioned in your member reordering patterns
             </remarks>
         </member>
+        <member name="T:Senparc.Weixin.BrowserUtility.BrowserUtility">
+            <summary>
+            浏览器公共类
+            </summary>
+        </member>
         <member name="M:Senparc.Weixin.BrowserUtility.BrowserUtility.SideInWeixinBrowser(System.Web.HttpContextBase)">
             <summary>
             判断是否在微信内置浏览器中
@@ -1730,6 +2012,11 @@
             <param name="doFlush">是否立即更新到缓存</param>
             <returns></returns>
         </member>
+        <member name="T:Senparc.Weixin.EntityUtility.EntityUtility">
+            <summary>
+            实体工具类
+            </summary>
+        </member>
         <member name="M:Senparc.Weixin.EntityUtility.EntityUtility.ConvertTo``1(System.IConvertible)">
             <summary>
             将对象转换到指定类型
@@ -1757,6 +2044,11 @@
             <param name="value"></param>
             <param name="specialType"></param>
         </member>
+        <member name="T:Senparc.Weixin.Utilities.WeixinUtility.ApiUtility">
+            <summary>
+            微信 API 工具类
+            </summary>
+        </member>
         <member name="M:Senparc.Weixin.Utilities.WeixinUtility.ApiUtility.IsAppId(System.String)">
             <summary>
             判断accessTokenOrAppId参数是否是AppId
@@ -1770,6 +2062,11 @@
             </summary>
             <param name="expireInSeconds">有效时间（秒）</param>
             <returns></returns>
+        </member>
+        <member name="T:Senparc.Weixin.XmlUtility.XmlUtility">
+            <summary>
+            XML 工具类
+            </summary>
         </member>
         <member name="M:Senparc.Weixin.XmlUtility.XmlUtility.Deserialize``1(System.String)">
             <summary>
@@ -1805,7 +2102,7 @@
         </member>
         <member name="T:Senparc.Weixin.HttpUtility.Get">
             <summary>
-            Get请求处理
+            Get 请求处理
             </summary>
         </member>
         <member name="M:Senparc.Weixin.HttpUtility.Get.GetJson``1(System.String,System.Text.Encoding,System.Nullable{System.Int32})">
@@ -1824,6 +2121,11 @@
             </summary>
             <param name="url"></param>
             <param name="stream"></param>
+        </member>
+        <member name="T:Senparc.Weixin.HttpUtility.Post">
+            <summary>
+            Post 请求处理
+            </summary>
         </member>
         <member name="M:Senparc.Weixin.HttpUtility.Post.GetResult``1(System.String)">
             <summary>
@@ -1881,6 +2183,11 @@
             <param name="url"></param>
             <param name="data"></param>
             <param name="stream"></param>
+        </member>
+        <member name="T:Senparc.Weixin.HttpUtility.RequestUtility">
+            <summary>
+            HTTP 请求工具类
+            </summary>
         </member>
         <member name="M:Senparc.Weixin.HttpUtility.RequestUtility.SetHttpProxy(System.String,System.String,System.String,System.String)">
             <summary>
@@ -1995,7 +2302,14 @@
             <param name="url"></param>
             <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Senparc.Weixin.HttpUtility.RequestUtility.AsUrlData(System.String)" -->
+        <!-- 对于成员“M:Senparc.Weixin.HttpUtility.RequestUtility.AsUrlData(System.String)”忽略有格式错误的 XML 注释 -->
+        <member name="T:Senparc.Weixin.MessageHandlers.IMessageHandler`2">
+            <summary>
+            IMessageHandler接口
+            </summary>
+            <typeparam name="TRequest">IRequestMessageBase</typeparam>
+            <typeparam name="TResponse">IResponseMessageBase</typeparam>
+        </member>
         <member name="P:Senparc.Weixin.MessageHandlers.IMessageHandler`2.WeixinOpenId">
             <summary>
             发送者用户名（OpenId）
@@ -2197,6 +2511,11 @@
             执行微信请求
             </summary>
         </member>
+        <member name="T:Senparc.Weixin.StreamUtility.StreamUtility">
+            <summary>
+            流工具类
+            </summary>
+        </member>
         <member name="M:Senparc.Weixin.StreamUtility.StreamUtility.GetBase64String(System.IO.Stream)">
             <summary>
             获取Stream的Base64字符串
@@ -2262,6 +2581,11 @@
         <member name="M:Senparc.Weixin.WeixinTrace.TimeLog">
             <summary>
             统一时间格式
+            </summary>
+        </member>
+        <member name="M:Senparc.Weixin.WeixinTrace.ThreadLog">
+            <summary>
+            当前线程记录
             </summary>
         </member>
         <member name="M:Senparc.Weixin.WeixinTrace.Unindent">

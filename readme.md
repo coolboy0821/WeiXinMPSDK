@@ -29,14 +29,15 @@
 | # | 模块功能                                            | DLL                               | Nuget                                       |
 |---|----------------------------------------------------|-----------------------------------|---------------------------------------------|
 | 1| 基础库                                               |Senparc.Weixin.dll                 | [![Senparc.Weixin][1.1]][1.2]               |
-| 2| 微信公众号 / 小程序 / 微信支付 / JSSDK / 摇周边 / 等等 |Senparc.Weixin.MP.dll            | [![Senparc.Weixin.MP][2.1]][2.2]            |
+| 2| 微信公众号 / 微信支付 / JSSDK / 摇周边 / 等等 |Senparc.Weixin.MP.dll                       | [![Senparc.Weixin.MP][2.1]][2.2]            |
 | 3| ASP.NET MVC 扩展                                     |Senparc.Weixin.MP.MVC.dll          | [![Senparc.Weixin.MP.MVC][3.1]][3.2]        |
 | 4| 微信企业号                                           |Senparc.Weixin.QY.dll              | [![Senparc.Weixin.QY][4.1]][4.2]            |
-| 5| 企业微信（准备中）                                             |Senparc.Weixin.Work.dll              | [![Senparc.Weixin.Work][5.1]][5.2]            |
+| 5| 企业微信（准备中）                                    |Senparc.Weixin.Work.dll            | [![Senparc.Weixin.Work][5.1]][5.2]            |
 | 6| 微信开放平台                                         |Senparc.Weixin.Open.dll            | [![Senparc.Weixin.Open][6.1]][6.2]          |
 | 7| Redis 分布式缓存                                     |Senparc.Weixin.Cache.Redis.dll     | [![Senparc.Weixin.Cache.Redis][7.1]][7.2]   |
 | 8| Memcached 分布式缓存                                 |Senparc.Weixin.Cache.Memcached.dll |[![Senparc.Weixin.Cache.Memcached][8.1]][8.2]| 
 | 9| [微信小程序（独立项目）](https://github.com/JeffreySu/WxOpen)    |Senparc.Weixin.WxOpen.dll		  |[![Senparc.Weixin.WxOpen][9.1]][9.2]         | 
+|10| [WebSocket（独立项目）](https://github.com/JeffreySu/Senparc.WebSocket)    |Senparc.WebSocket.dll		  |[![Senparc.WebSocket][10.1]][10.2]         | 
 
 [1.1]: https://img.shields.io/nuget/v/Senparc.Weixin.svg?style=flat
 [1.2]: https://www.nuget.org/packages/Senparc.Weixin
@@ -56,7 +57,8 @@
 [8.2]: https://www.nuget.org/packages/Senparc.Weixin.Cache.Memcached
 [9.1]: https://img.shields.io/nuget/v/Senparc.Weixin.WxOpen.svg?style=flat
 [9.2]: https://www.nuget.org/packages/Senparc.Weixin.WxOpen
-
+[10.1]: https://img.shields.io/nuget/v/Senparc.WebSocket.svg?style=flat
+[10.2]: https://www.nuget.org/packages/Senparc.WebSocket
 
 
 本库为.NET4.5，其他.NET版本请看各自分支（DotNET-Core、.NET 4.0等）。
@@ -82,13 +84,13 @@
 9. 源代码及最新更新：https://github.com/JeffreySu/WeiXinMPSDK
 10. 微信开发资源集合：https://github.com/JeffreySu/WeixinResource
 
-* 技术交流QQ群（目前未满可加：`3群`、`12群`，其他群均已满）：
+* 技术交流QQ群（目前未满可加：`3群`、`10群（分布式缓存）`、`12群（小程序）`，其他群均已满）：
 
 > 1群：300313885，2群：293958349，*`3群：342319110`*，4群：372212092，5群：377815480
 
 > 6群：425898825，7群：482942254，8群：106230270，9群：539061281，11群：553198593
 
-> 10群（Redis / Memcached 分布式缓存群）：只加已经在使用的开发者。发送申请及截图至 zsu@senparc.com 或QQ：498977166，标题：Senparc.Weixin.Cache 加群申请
+> 10群（分布式缓存群）：246860933，只加已经在使用分布式缓存的开发者
 
 > *`12群（微信小程序）：108830388`*
 
@@ -102,10 +104,8 @@
 资金捐助：[进入](http://sdk.weixin.senparc.com#donate)
 
 
-###关注测试账号（SenparcRobot）：
-[![qrcode]](http://weixin.senparc.com/)
-[qrcode]: http://sdk.weixin.senparc.com/Images/qrcode.jpg
-
+### 关注测试账号（SenparcRobot）：
+[![qrcode](http://sdk.weixin.senparc.com/Images/qrcode.jpg)](http://weixin.senparc.com/)
 
 
 ## 如何使用.NET Core开发
@@ -140,10 +140,11 @@
 
 | 文件夹 | 说明 |
 |--------|--------|
+|Senparc.WebSocket|WebSocket 模块|
 |Senparc.Weixin.Cache|Senparc.Weixin.Cache.Memcached.dll 、 Senparc.Weixin.Cache.Redis.dll 等分布式缓存扩展方案|
 |Senparc.Weixin.MP.BuildOutPut|所有最新版本DLL发布文件夹|
 |Senparc.Weixin.MP.MvcExtension|Senparc.Weixin.MP.MvcExtension.dll源码，为MVC4.0项目提供的扩展包。|
-|Senparc.Weixin.MP.Sample|可以直接发布使用的Demo（ASP.NET MVC 4.0）|
+|Senparc.Weixin.MP.Sample|可以直接发布使用的Demo（ASP.NET MVC 4.5）|
 |Senparc.Weixin.MP.Sample.WebForms|可以直接发布使用的Demo（ASP.NET WebForms）|
 |Senparc.Weixin.MP|Senparc.Weixin.MP.dll 微信公众账号SDK源代码|
 |Senparc.Weixin.Open|Senparc.Weixin.Open.dll 第三方开放平台SDK源代码|
@@ -156,7 +157,8 @@ Senparc.Weixin.MP.Sample中的关键代码说明
 --------------
 >注：这是MVC项目，WebForms项目见对应Demo中的Weixin.aspx。
 
-###/Controllers/WeixinController.cs
+### /Controllers/WeixinController.cs
+
 下面的Token需要和微信公众平台后台设置的Token同步，如果经常更换建议写入Web.config等配置文件（实际使用过程中两列建议使用数字+英文大小写改写Token，Token一旦被破解，微信请求将很容易被伪造！）：
 ```C#
 public readonly string Token = "weixin";
@@ -201,7 +203,8 @@ public ActionResult Post(PostModel postModel)
     ...
 }
 ```
-###如何处理微信公众账号请求？
+### 如何处理微信公众账号请求？
+
 Senparc.Weixin.MP提供了2中处理请求的方式，[传统方法](https://github.com/JeffreySu/WeiXinMPSDK/wiki/处理微信信息的常规方法)及使用[MessageHandler](https://github.com/JeffreySu/WeiXinMPSDK/wiki/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8MessageHandler%E7%AE%80%E5%8C%96%E6%B6%88%E6%81%AF%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B)处理方法（推荐）。上面两个方法在wiki中已经有比较详细的说明，这里简单举例MessageHandler的处理方法。
 
 MessageHandler的处理流程非常简单：
@@ -229,6 +232,7 @@ public ActionResult Post(PostModel postModel)
 整个消息除了postModel的赋值以外，接收（第一步）、处理（第二步）、返回（第三步）分别只需要一行代码。
 
 上述代码中的CustomMessageHandler是一个自定义的类，继承自Senparc.Weixin.MP.MessageHandler.cs。MessageHandler是一个抽象类，包含了执行各种不同请求类型的抽象方法（如文字，语音，位置、图片等等），我们只需要在自己创建的CustomMessageHandler中逐个实现这些方法就可以了。刚建好的CustomMessageHandler.cs如下：
+
 ```C#
 using System;
 using System.IO;
@@ -268,6 +272,7 @@ namespace Senparc.Weixin.MP.Sample.CustomerMessageHandler
     }
 }
 ```
+
 其中OnTextRequest、OnVoiceRequest等分别对应了接收文字、语音等不同的请求类型。
 
 比如我们需要对文字类型请求做出回应，只需要完善OnTextRequest方法：
@@ -290,7 +295,8 @@ namespace Senparc.Weixin.MP.Sample.CustomerMessageHandler
 
 使用Nuget安装到项目中
 --------------
-###如何处理微信公众号请求？
+### 如何处理微信公众号请求？
+
 * Nuget 地址：https://www.nuget.org/packages/Senparc.Weixin.MP
 
 * 命令：
@@ -299,7 +305,7 @@ PM> Install-Package Senparc.Weixin.MP
 ```
 
 
-###如何处理微信小程序请求？
+### 如何处理微信小程序请求？
 
 Senparc.Weixin.WxOpen对微信小程序的消息、API进行了封装，保持了公众号处理请求一致的开发过程。
 
@@ -310,7 +316,8 @@ Senparc.Weixin.WxOpen对微信小程序的消息、API进行了封装，保持�
 PM> Install-Package Senparc.Weixin.WxOpen
 ```
 
-###如何增强 ASP.NET MVC 项目的功能？
+### 如何增强 ASP.NET MVC 项目的功能？
+
 Senparc.Weixin.MP.MVC 针对 ASP.NET MVC 项目做了更多的优化，包括便捷的浏览器环境判断、官方 bug 修复等。
 * Nuget 地址：https://www.nuget.org/packages/Senparc.Weixin.MP.MVC
 
@@ -319,7 +326,8 @@ Senparc.Weixin.MP.MVC 针对 ASP.NET MVC 项目做了更多的优化，包括便
 PM> Install-Package Senparc.Weixin.MP.MVC
 ```
 
-###如何处理微信企业号请求？
+### 如何处理微信企业号请求？
+
 Senparc.Weixin.QY.dll对企业号相关功能进行了封装，操作过程和微信公众账号SDK（Senparc.Weixin.MP）保持了一致。
 
 * Nuget 地址：https://www.nuget.org/packages/Senparc.Weixin.QY
@@ -329,7 +337,8 @@ Senparc.Weixin.QY.dll对企业号相关功能进行了封装，操作过程和�
 PM> Install-Package Senparc.Weixin.QY
 ```
 
-###如何处理微信开放平台请求？
+### 如何处理微信开放平台请求？
+
 Senparc.Weixin.Open.dll对目前所有的开放平台API进行了封装，消息处理过程和微信公众账号SDK（Senparc.Weixin.MP）保持了一致，其他一些特殊的消息流程请先阅读官方的文档，然后对照Senparc.Weixin.MP.Sample中有关Open的Demo进行开发。
 
 * Nuget 地址为https://www.nuget.org/packages/Senparc.Weixin.Open
@@ -340,7 +349,8 @@ PM> Install-Package Senparc.Weixin.Open
 ```
 
 
-###如何使用分布式缓存？
+### 如何使用分布式缓存？
+
 Senparc.Weixin SDK 提供了完善的缓存策略接口，默认使用本机缓存实现，同时也提供了 Redis 和 Memcached 两个扩展方案，您也可以根据相同的规则添加自己的缓存策略。
 
 * Redis 缓存扩展包 Nuget 地址：https://www.nuget.org/packages/Senparc.Weixin.Cache.Redis
@@ -365,76 +375,76 @@ Senparc.Weixin.WxOpen目前包含了所有小程序需要用到的消息处理�
 
 已实现功能
 -------------
-> * 微信公众号
-    - [x] 接收/发送消息（事件）
-    - [x] 自定义菜单 & 个性化菜单
-    - [x] 消息管理
-    - [x] OAuth授权
-    - [x] JSSDK
-    - [x] 微信支付
-    - [x] 用户管理
-    - [x] 素材管理
-	- [x] 账号管理
-        - [x] 带参数二维码
-        - [X] 长链接转短链接接口
-        - [ ] 微信认证事件推送
-    - [x] 数据统计
-    - [x] 微信小店
-    - [x] 微信卡券
-        - [x] 卡券事件推送
-            - [ ] 买单事件推送
-            - [ ] 会员卡内容更新事件推送
-            - [ ] 库存报警事件推送
-            - [ ] 券点流水详情事件推送
-    - [x] 微信门店
-    - [x] 微信智能
-    - [x] 微信设备功能
-    - [x] 多客服功能
-    - [x] 微信摇一摇周边
-    - [x] 微信连WI-FI（未完整）
-    - [x] 微信扫一扫（商家）
-        - [ ] 扫一扫事件推送
-            - [ ] 打开商品主页事件推送
-            - [ ] 关注公众号事件推送
-            - [ ] 进入公众号事件推送
-            - [ ] 地理位置信息异步推送
-            - [ ] 商品审核结果推送
+* 微信公众号
+>   - [x] 接收/发送消息（事件）
+>   - [x] 自定义菜单 & 个性化菜单
+>   - [x] 消息管理
+>   - [x] OAuth授权
+>   - [x] JSSDK
+>   - [x] 微信支付
+>   - [x] 用户管理
+>   - [x] 素材管理
+>   - [x] 账号管理
+>       - [x] 带参数二维码
+>       - [X] 长链接转短链接接口
+>       - [ ] 微信认证事件推送
+>   - [x] 数据统计
+>   - [x] 微信小店
+>   - [x] 微信卡券
+>       - [x] 卡券事件推送
+>           - [ ] 买单事件推送
+>           - [ ] 会员卡内容更新事件推送
+>           - [ ] 库存报警事件推送
+>           - [ ] 券点流水详情事件推送
+>   - [x] 微信门店
+>   - [x] 微信智能
+>   - [x] 微信设备功能
+>   - [x] 多客服功能
+>   - [x] 微信摇一摇周边
+>   - [x] 微信连WI-FI（未完整）
+>   - [x] 微信扫一扫（商家）
+>       - [ ] 扫一扫事件推送
+>           - [ ] 打开商品主页事件推送
+>           - [ ] 关注公众号事件推送
+>           - [ ] 进入公众号事件推送
+>           - [ ] 地理位置信息异步推送
+>           - [ ] 商品审核结果推送
 
-> * 微信开放平台
-    - [x] 网站应用
-    - [x] 公众号第三方平台
+* 微信开放平台
+>   - [x] 网站应用
+>   - [x] 公众号第三方平台
 
 
-> * 微信企业号
-	- [x] 管理通讯录
-	- [x] 管理素材文件
-	- [x] 管理企业号应用
-	- [x] 接收消息与事件
-	- [x] 发送消息
-	- [x] 自定义菜单
-	- [x] 身份验证接口
-	- [x] JSSDK
-	- [x] 第三方应用授权
-	    - [x] 第三方回调协议
-	        - [ ] 授权成功推送auth_code事件
-	        - [ ] 通讯录变更通知
- 	- [x] 企业号授权登陆
-	- [x] 企业号微信支付
-	- [x] 企业回话服务
-	    - [ ] 企业会话回调
-	- [x] 企业摇一摇周边
-	- [ ] 企业卡券服务
-	    - [ ] 卡券事件推送
-	- [x] 企业客服服务
-	    - [ ] 客服回复消息回调
+* 微信企业号
+>	- [x] 管理通讯录
+>	- [x] 管理素材文件
+>	- [x] 管理企业号应用
+>	- [x] 接收消息与事件
+>	- [x] 发送消息
+>	- [x] 自定义菜单
+>	- [x] 身份验证接口
+>	- [x] JSSDK
+>	- [x] 第三方应用授权
+>	    - [x] 第三方回调协议
+>	        - [ ] 授权成功推送auth_code事件
+>	        - [ ] 通讯录变更通知
+> 	- [x] 企业号授权登陆
+>	- [x] 企业号微信支付
+>	- [x] 企业回话服务
+>	    - [ ] 企业会话回调
+>	- [x] 企业摇一摇周边
+>	- [ ] 企业卡券服务
+>	    - [ ] 卡券事件推送
+>	- [x] 企业客服服务
+>	    - [ ] 客服回复消息回调
 	    
 
 
-> * 缓存策略
-    - [x] 策略扩展接口
-    - [x] 本地缓存
-    - [x] Redis 扩展包
-    - [x] Memcached 扩展包
+* 缓存策略
+>   - [x] 策略扩展接口
+>   - [x] 本地缓存
+>   - [x] Redis 扩展包
+>   - [x] Memcached 扩展包
 
  欢迎开发者对未完成或需要补充的模块进行 Pull Request！
 
@@ -444,46 +454,30 @@ Senparc.Weixin.WxOpen目前包含了所有小程序需要用到的消息处理�
 
 资金捐助：
 
-[![donate]](http://sdk.weixin.senparc.com#donate)
-[donate]: http://sdk.weixin.senparc.com/Images/T1nAXdXb0jXXXXXXXX_s.png
+[![donate](http://sdk.weixin.senparc.com/Images/T1nAXdXb0jXXXXXXXX_s.png)](http://sdk.weixin.senparc.com#donate)
 
 
 图书众筹
 --------------
 扫描下方二维码参与《微信公众平台快速开发》图书众筹
 
-[![CrowdFunding]](http://www.weiweihi.com:8080/CrowdFunding/Home)  
-[CrowdFunding]: http://sdk.weixin.senparc.com/images/crowdfunding-qrcode.png
+[![CrowdFunding](http://sdk.weixin.senparc.com/images/crowdfunding-qrcode.png)](http://www.weiweihi.com:8080/CrowdFunding/Home)  
 
 License
 --------------
-FreeBSD License
+Apache License Version 2.0
+
 ```
-Copyright (c) 2016, Jeffrey Su <www.jeffrey.su@gmail.com>, Suzhou Senparc Network Technology Co.,Ltd.
-All rights reserved.
+Copyright 2017 Jeffrey Su & Suzhou Senparc Network Technology Co.,Ltd.
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met: 
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
+except in compliance with the License. You may obtain a copy of the License at
 
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer. 
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution. 
+http://www.apache.org/licenses/LICENSE-2.0
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-The views and conclusions contained in the software and documentation are those
-of the authors and should not be interpreted as representing official policies, 
-either expressed or implied, of the FreeBSD Project.
+Unless required by applicable law or agreed to in writing, software distributed under the 
+License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+either express or implied. See the License for the specific language governing permissions 
+and limitations under the License.
 ```
-via https://github.com/JeffreySu/WeiXinMPSDK/blob/master/license.md
+Detail: https://github.com/JeffreySu/WeiXinMPSDK/blob/master/license.md

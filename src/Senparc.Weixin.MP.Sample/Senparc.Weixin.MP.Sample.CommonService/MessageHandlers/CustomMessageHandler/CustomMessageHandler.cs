@@ -117,7 +117,7 @@ namespace Senparc.Weixin.MP.Sample.CommonService.CustomMessageHandler
         {
             //TODO:这里的逻辑可以交给Service处理具体信息，参考OnLocationRequest方法或/Service/LocationSercice.cs
 
-            //书中例子
+            #region 书中例子
             //if (requestMessage.Content == "你好")
             //{
             //    var responseMessage = base.CreateResponseMessage<ResponseMessageNews>();
@@ -143,7 +143,7 @@ namespace Senparc.Weixin.MP.Sample.CommonService.CustomMessageHandler
             //    //...
             //}
 
-
+            #endregion
 
             //方法一（v0.1），此方法调用太过繁琐，已过时（但仍是所有方法的核心基础），建议使用方法二到四
             //var responseMessage =
@@ -309,6 +309,12 @@ namespace Senparc.Weixin.MP.Sample.CommonService.CustomMessageHandler
             {
                 var ex = new WeixinException("openid:" + requestMessage.FromUserName + ":这是一条测试异常信息");//回调过程在global的ConfigWeixinTraceLog()方法中
                 responseMessage.Content = "请等待异步模板消息发送到此界面上（自动延时数秒）。\r\n当前时间：" + DateTime.Now.ToString();
+            }
+            else if (requestMessage.Content.ToUpper() == "MUTE")
+            {
+                return new SuccessResponseMessage();
+                base.TextResponseMessage = "success";
+                responseMessage = null;
             }
             else
             {

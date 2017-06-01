@@ -129,35 +129,6 @@ namespace Senparc.Weixin.MP.TenPayLibV3
                 return responseContent;
             }
         }
-
-        /// <summary>
-        /// 【异步方法】带证书提交
-        /// </summary>
-        /// <param name="cert">证书绝对路径</param>
-        /// <param name="certPassword">证书密码</param>
-        /// <param name="data">数据</param>
-        /// <param name="url">Url</param>
-        /// <returns></returns>
-        private static async Task<string> CertPostAsync(string cert, string certPassword, string data, string url, int timeOut = Config.TIME_OUT)
-        {
-            string password = certPassword;
-            var dataBytes = Encoding.UTF8.GetBytes(data);
-            using (MemoryStream ms = new MemoryStream(dataBytes))
-            {
-                //调用证书
-                X509Certificate2 cer = new X509Certificate2(cert, certPassword, X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.MachineKeySet);
-
-                string responseContent = await HttpUtility.RequestUtility.HttpPostAsync(
-                    url,
-                    postStream: ms,
-                    cer: cer,
-                    timeOut: timeOut);
-
-                return responseContent;
-            }
-        }
-
-
         #endregion
 
         #region 同步请求
